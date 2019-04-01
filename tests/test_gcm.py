@@ -4,13 +4,13 @@ import httmock
 import mock
 import pytest
 
-from pushjack import (
+from pushjack_http2 import (
     GCMClient,
     GCMError,
     exceptions
 )
-from pushjack.gcm import GCMConnection
-from pushjack.utils import json_dumps
+from pushjack_http2.gcm import GCMConnection
+from pushjack_http2.utils import json_dumps
 
 from .fixtures import (
     gcm_client,

@@ -19,13 +19,13 @@ import pytest
 import httmock
 import mock
 
-import pushjack
-from pushjack import (
+import pushjack_http2
+from pushjack_http2 import (
     APNSClient,
     GCMClient,
 )
-from pushjack.apns import APNS_ERROR_RESPONSE_COMMAND
-from pushjack.utils import json_dumps, json_loads
+from pushjack_http2.apns import APNS_ERROR_RESPONSE_COMMAND
+from pushjack_http2.utils import json_dumps, json_loads
 
 
 # pytest.mark is a generator so create alias for convenience
@@ -120,7 +120,7 @@ def apns_tokens(num=1):
 
 @pytest.fixture
 def apns_socket():
-    with mock.patch('pushjack.apns.create_socket') as create_socket:
+    with mock.patch('pushjack_http2.apns.create_socket') as create_socket:
         sock = apns_socket_factory(TCP_CONNECT)
         create_socket.return_value = sock
 
@@ -131,7 +131,7 @@ def apns_socket():
 
 @contextmanager
 def apns_create_error_socket(code):
-    with mock.patch('pushjack.apns.create_socket') as create_socket:
+    with mock.patch('pushjack_http2.apns.create_socket') as create_socket:
         sock = apns_socket_error_factory(code)
         create_socket.return_value = sock
 

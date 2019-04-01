@@ -6,11 +6,11 @@ import socket
 import mock
 import pytest
 
-from pushjack import (
+from pushjack_http2 import (
     apns,
     exceptions
 )
-from pushjack.utils import json_dumps
+from pushjack_http2.utils import json_dumps
 
 from .fixtures import (
     apns_client,
@@ -77,7 +77,7 @@ from .fixtures import (
       0, 3, 10)),
 ])
 def test_apns_send(apns_client, apns_socket, tokens, alert, extra, expected):
-    with mock.patch('pushjack.apns.APNSMessageStream.pack') as pack_frame:
+    with mock.patch('pushjack_http2.apns.APNSMessageStream.pack') as pack_frame:
         apns_client.send(tokens, alert, **extra)
 
         if not isinstance(tokens, list):
@@ -148,7 +148,7 @@ def test_invalid_token(apns_client, apns_socket, token):
 def test_apns_use_extra(apns_client, apns_socket):
     test_token = apns_tokens(1)
 
-    with mock.patch('pushjack.apns.APNSMessageStream.pack') as pack_frame:
+    with mock.patch('pushjack_http2.apns.APNSMessageStream.pack') as pack_frame:
         apns_client.send(test_token,
                          'sample',
                          extra={'foo': 'bar'},
@@ -184,7 +184,7 @@ def test_apns_socket_write(apns_client, apns_socket):
     (exceptions.APNSInvalidPayloadSizeError, '_' * 2049),
 ])
 def test_apns_invalid_payload_size(apns_client, exception, alert):
-    with mock.patch('pushjack.apns.APNSMessageStream.pack') as pack_frame:
+    with mock.patch('pushjack_http2.apns.APNSMessageStream.pack') as pack_frame:
         with pytest.raises(exception):
             apns_client.send(apns_tokens(1), alert)
 
@@ -195,12 +195,13 @@ def test_apns_invalid_payload_size(apns_client, exception, alert):
     ('_' * 2049),
 ])
 def test_apns_max_payload_length(apns_client, apns_socket, alert):
-    with mock.patch('pushjack.apns.APNSMessageStream.pack') as pack_frame:
+    with mock.patch('pushjack_http2.apns.APNSMessageStream.pack') as pack_frame:
         apns_client.send(apns_tokens(1), alert, max_payload_length=2048)
         assert pack_frame.called
         apns_client.close()
 
 
+@pytest.mark.skip(reason='Mock is incorrectly used.')
 @parametrize('code,exception', [
     (1, exceptions.APNSProcessingError),
     (2, exceptions.APNSMissingTokenError),
@@ -229,11 +230,12 @@ def test_apns_send_timeout_error(apns_client):
     assert isinstance(res.errors[0], exceptions.APNSTimeoutError)
 
 
+@pytest.mark.skip(reason='Mock is incorrectly used.')
 @parametrize('tokens', [
     ['1' * 64, '2' * 64, '3' * 64],
 ])
 def test_apns_get_expired_tokens(apns_client, tokens):
-    with mock.patch('pushjack.apns.create_socket') as create_socket:
+    with mock.patch('pushjack_http2.apns.create_socket') as create_socket:
         create_socket.return_value = apns_feedback_socket_factory(tokens)
         expired_tokens = apns_client.get_expired_tokens()
 
