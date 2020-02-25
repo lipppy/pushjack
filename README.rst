@@ -2,19 +2,8 @@
 pushjack
 ********
 
-|version| |travis| |coveralls| |license|
 
-Push notifications for APNS (iOS) and GCM (Android).
-
-
-Links
-=====
-
-- Project: https://github.com/dgilland/pushjack
-- Documentation: https://pushjack.readthedocs.io
-- PyPi: https://pypi.python.org/pypi/pushjack/
-- TravisCI: https://travis-ci.org/dgilland/pushjack
-
+Push notifications for APNS (iOS) and GCM (Android). It provides HTTP/2 network protocol based APNS client.
 
 Quickstart
 ==========
@@ -24,10 +13,11 @@ Install using pip:
 
 ::
 
-    pip install pushjack
+    pip install pushjack-http2
 
 
-Whether using ``APNS`` or ``GCM``, pushjack provides clients for each.
+Whether using ``APNS`` or ``GCM``, pushjack provides clients for each. It also provides
+a HTTP/2 based APNS client.
 
 
 APNS (using certificates)
@@ -38,7 +28,7 @@ Send notifications using the ``APNSClient`` class:
 
 .. code-block:: python
 
-    from pushjack import APNSClient
+    from pushjack_http2 import APNSClient
 
     client = APNSClient(certificate='<path/to/certificate.pem>',
                         default_error_timeout=10,
@@ -121,7 +111,7 @@ For the APNS sandbox, use ``APNSSandboxClient`` instead:
 
 .. code-block:: python
 
-    from pushjack import APNSSandboxClient
+    from pushjack_http2 import APNSSandboxClient
 
 APNS (using Auth tokens)
 ------------------------
@@ -131,7 +121,7 @@ Send notifications using the ``APNSHTTP2Client`` class:
 
 .. code-block:: python
 
-    from pushjack import APNSHTTP2Client
+    from pushjack_http2 import APNSHTTP2Client
 
     key = "my_key"
 
@@ -166,7 +156,7 @@ For the APNS sandbox, use ``APNSHTTP2SandboxClient`` instead:
 
 .. code-block:: python
 
-    from pushjack import APNSHTTP2SandboxClient
+    from pushjack_http2 import APNSHTTP2SandboxClient
 
 
 GCM
@@ -177,7 +167,7 @@ Send notifications using the ``GCMClient`` class:
 
 .. code-block:: python
 
-    from pushjack import GCMClient
+    from pushjack_http2 import GCMClient
 
     client = GCMClient(api_key='<api-key>')
 
@@ -247,19 +237,3 @@ Access response data.
 
     # List of canonical ids (registration ids that have changed).
     res.canonical_ids
-
-
-For more details, please see the full documentation at https://pushjack.readthedocs.io.
-
-
-.. |version| image:: http://img.shields.io/pypi/v/pushjack.svg?style=flat-square
-    :target: https://pypi.python.org/pypi/pushjack/
-
-.. |travis| image:: http://img.shields.io/travis/dgilland/pushjack/master.svg?style=flat-square
-    :target: https://travis-ci.org/dgilland/pushjack
-
-.. |coveralls| image:: http://img.shields.io/coveralls/dgilland/pushjack/master.svg?style=flat-square
-    :target: https://coveralls.io/r/dgilland/pushjack
-
-.. |license| image:: http://img.shields.io/pypi/l/pushjack.svg?style=flat-square
-    :target: https://pypi.python.org/pypi/pushjack/
