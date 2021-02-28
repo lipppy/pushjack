@@ -11,6 +11,7 @@ from .apns import (
     APNSExpiredToken,
     APNSHTTP2Client,
     APNSHTTP2SandboxClient,
+    APNSAuthToken,
 )
 
 from .gcm import (
