@@ -5,12 +5,12 @@ Authors
 Lead
 ----
 
-- Derrick Gilland, dgilland@gmail.com, `dgilland@github <https://github.com/dgilland>`_
-
+- Joseph Fox, im.not.chatty@gmail.com, `joseph-fox@github <https://github.com/joseph-fox/pushjack?>`_
 
 Contributors
 ------------
 
+- Derrick Gilland, dgilland@gmail.com, `dgilland@github <https://github.com/dgilland>`_
 - Brad Montgomery, `bradmontgomery@github <https://github.com/bradmontgomery>`_
 - Julius Seporaitis, `seporaitis@github <https://github.com/seporaitis>`_
 - Ahmed Khedr, `aakhedr@github <https://github.com/aakhedr>`_
