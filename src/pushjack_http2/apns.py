@@ -54,6 +54,7 @@ __all__ = (
     'APNSExpiredToken',
     'APNSHTTP2Client',
     'APNSHTTP2SandboxClient'
+    'APNSAuthToken',
 )
 
 
