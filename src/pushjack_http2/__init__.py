@@ -12,6 +12,7 @@ from .apns import (
     APNSHTTP2Client,
     APNSHTTP2SandboxClient,
     APNSAuthToken,
+    APNSAuthTokenFile,
 )
 
 from .gcm import (
@@ -53,6 +54,7 @@ from .exceptions import (
     GCMDeviceMessageRateExceededError,
     NotificationError,
     ServerError,
+    VariousError,
 )
 
 # Set default logging handler to avoid "No handler found" warnings.
