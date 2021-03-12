@@ -1044,7 +1044,7 @@ class APNSHTTP2Client(object):
             )
             response = self.conn.get_response(stream_id)
         except Exception as e:
-             raise VariousError(repr(e), identifier)
+            raise VariousError(repr(e), identifier)
         if response.status != HttpStatus.OK:
             raise VariousError('Invalid status code - {0}'.format(response.status), identifier)
 
