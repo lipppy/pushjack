@@ -43,6 +43,8 @@ from .exceptions import (
     APNSServerError,
     APNSTimeoutError,
     APNSUnsendableError,
+    APNSUnknownError,
+    VariousError,
     raise_apns_server_error
 )
 from .utils import json_dumps, chunk, compact_dict
@@ -53,8 +55,9 @@ __all__ = (
     'APNSResponse',
     'APNSExpiredToken',
     'APNSHTTP2Client',
-    'APNSHTTP2SandboxClient'
+    'APNSHTTP2SandboxClient',
     'APNSAuthToken',
+    'APNSAuthTokenFile',
 )
 
 
@@ -982,7 +985,6 @@ class APNSHTTP2Client(object):
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
 
-        unsendable_devices = []
         if max_payload_length is None:
             max_payload_length = self.default_max_payload_length
 
@@ -993,22 +995,22 @@ class APNSHTTP2Client(object):
         validate_tokens(ids)
         validate_message(message, max_size=APNS_HTTP2_MAX_NOTIFICATION_SIZE)
 
-        for device_id in ids:
+        errors = []
+
+        for idx, device_id in enumerate(ids):
 
             try:
                 self._send(
                     device_id=device_id, message=message,
-                    low_priority=low_priority, expiration=expiration)
-            except Exception:
-                unsendable_devices.append(device_id)
+                    low_priority=low_priority, expiration=expiration,
+                    identifier=idx
+                )
+            except Exception as ex:
+                errors.append(ex)
 
-        if not unsendable_devices:
-            return
+        response = APNSResponse(ids, message, errors)
 
-        if len(unsendable_devices) != len(ids):
-            raise APNSMessagePartiallySentError
-
-        raise APNSUnsendableError("Unable to send messages")
+        return response
 
     def _send(
             self, device_id, message, low_priority,
@@ -1023,13 +1025,12 @@ class APNSHTTP2Client(object):
         if expiration is None:
             expiration = str(int(time.time() + self.default_expiration_offset))
 
-        if not identifier:
-            identifier = str(uuid.uuid4())
+        apns_id = str(uuid.uuid4())
 
         request_headers = {
             'apns-expiration': expiration,
             'apns-priority': priority,
-            'apns-id': identifier,
+            'apns-id': apns_id,
             'apns-topic': self.bundle_id,
             'authorization': 'bearer {0}'.format(self.token.encrypted_token)
         }
@@ -1043,10 +1044,9 @@ class APNSHTTP2Client(object):
             )
             response = self.conn.get_response(stream_id)
         except Exception as e:
-            raise APNSError(description=str(e))
+            raise VariousError(repr(e), identifier)
         if response.status != HttpStatus.OK:
-            raise APNSError(
-                'Invalid status code - {0}'.format(response.status))
+            raise VariousError('Invalid status code - {0}'.format(response.status), identifier)
 
         return response
 

@@ -38,6 +38,7 @@ __all__ = (
     'GCMDeviceMessageRateExceededError',
     'NotificationError',
     'ServerError',
+    'VariousError',
 )
 
 
@@ -66,6 +67,24 @@ class ServerError(NotificationError):
     def __repr__(self):  # pragma: no cover
         return str(self)
 
+class VariousError(NotificationError):
+    """Base exception for various errors."""
+    def __init__(self, description, identifier):
+        super(VariousError, self).__init__(self.code,
+                                          description,
+                                          identifier)
+        self.description = description
+        self.identifier = identifier
+
+    def __str__(self):  # pragma: no cover
+        return '{0} (code={1}): {2} for identifier {3}'.format(
+            self.__class__.__name__,
+            self.code,
+            self.description,
+            self.identifier)
+
+    def __repr__(self):  # pragma: no cover
+        return str(self)
 
 class APNSError(NotificationError):
     """Base exception for APNS errors."""
