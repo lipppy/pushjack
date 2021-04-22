@@ -551,29 +551,29 @@ class APNSMessage(object):
         """Return message as dictionary, overriding message."""
         msg = {}
 
-        if any([self.title,
-                self.title_loc_key,
-                self.title_loc_args,
-                self.action_loc_key,
-                self.loc_key,
-                self.loc_args,
-                self.launch_image]):
-            alert = {
-                'body': message,
-                'title': self.title,
-                'title-loc-key': self.title_loc_key,
-                'title-loc-args': self.title_loc_args,
-                'action-loc-key': self.action_loc_key,
-                'loc-key': self.loc_key,
-                'loc-args': self.loc_args,
-                'launch-image': self.launch_image,
-            }
+        alert = {
+            'body': message,
+            'title': self.title,
+            'title-loc-key': self.title_loc_key,
+            'title-loc-args': self.title_loc_args,
+            'action-loc-key': self.action_loc_key,
+            'loc-key': self.loc_key,
+            'loc-args': self.loc_args,
+            'launch-image': self.launch_image,
+        }
 
+        alert = compact_dict(alert)
+
+        # MA-2394: Param "raw" handling
+        extra_copy = self.extra.copy()
+        if "raw" in self.extra and self.extra['raw'] is not None:
+            alert['raw'] = extra_copy['raw']
+            extra_copy.pop("raw")
             alert = compact_dict(alert)
+            msg.update(extra_copy or {})
         else:
-            alert = message
+            msg.update(self.extra or {})
 
-        msg.update(self.extra or {})
         msg['aps'] = compact_dict({
             'alert': alert,
             'badge': self.badge,
